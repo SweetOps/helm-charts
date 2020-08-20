@@ -1,2 +1,3 @@
+validate-maintainers: false
 chart-dirs:
   - monitoring
