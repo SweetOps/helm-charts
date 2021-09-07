@@ -1,0 +1,46 @@
+kind: RunnerDeployment
+metadata:
+  name: {{ include "github-actions-runners.fullname" . }}
+  labels:
+    {{- include "github-actions-runners.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "github-actions-runners.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "github-actions-runners.serviceAccountName" . }}
+      image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+      imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+      repository: "{{ .Values.config.githubRepository }}"
+      organization: "{{ .Values.config.githubOrganization }}"
+      {{- with .Values.config.labels }}
+      labels:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      ephemeral: "{{ .Values.config.ephemeral }}"
+      dockerEnabled: "{{ .Values.config.dockerEnabled }}"
+      dockerMTU: "{{ .Values.config.dockerMTU }}"
+      dockerRegistryMirror: "{{ .Values.config.dockerRegistryMirror }}"
+      dockerdWithinRunnerContainer: "{{ .Values.config.dockerdWithinRunnerContainer }}"
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      resources:
+        {{- toYaml .Values.resources | nindent 8 }}

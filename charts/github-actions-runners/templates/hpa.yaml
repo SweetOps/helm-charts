@@ -1,0 +1,10 @@
+{{- if not .Values.autoscaling.enabled }}
+kind: HorizontalRunnerAutoscaler
+spec:
+  scaleTargetRef:
+    name: {{ include "github-actions-runners.fullname" . }}
+  {{- with .Values.autoscaling.scaleUpTriggers }}
+  scaleUpTriggers:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
