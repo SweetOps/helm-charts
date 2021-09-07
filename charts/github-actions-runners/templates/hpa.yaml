@@ -1,5 +1,9 @@
 {{- if not .Values.autoscaling.enabled }}
 kind: HorizontalRunnerAutoscaler
+metadata:
+  name: {{ include "github-actions-runners.fullname" . }}
+  labels:
+    {{- include "github-actions-runners.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     name: {{ include "github-actions-runners.fullname" . }}
