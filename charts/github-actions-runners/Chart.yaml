@@ -1,0 +1,7 @@
+apiVersion: v2
+name: github-actions-runners
+description: A Helm chart for provisioning Github Actions runners
+type: application
+version: 0.0.1
+maintainers:
+  - name: SweetOps
