@@ -1,4 +1,6 @@
 remote: origin
 target-branch: master
+chart-repos:
+  - actions-runner-controller=https://actions-runner-controller.github.io/actions-runner-controller
 chart-dirs:
   - charts

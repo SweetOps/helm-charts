@@ -1,46 +1,60 @@
+{{- range .Values.runnerDeployments }}
+---
+{{- $enabled := printf "%t" .enabled }}
+{{- if regexMatch "nil" $enabled }}{{- $enabled = "true" }}{{- end }}
+{{- if (eq $enabled "true") }}
 kind: RunnerDeployment
+apiVersion: actions.summerwind.dev/v1alpha1
 metadata:
-  name: {{ include "github-actions-runners.fullname" . }}
+  name: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
   labels:
-    {{- include "github-actions-runners.labels" . | nindent 4 }}
+    github-actions-runner: {{ .name }}
+    {{- include "github-actions-runners.labels" $ | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .replicaCount | default $.Values.global.replicaCount }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "github-actions-runners.selectorLabels" . | nindent 8 }}
+        github-actions-runner: {{ .name }}
+        {{- include "github-actions-runners.selectorLabels" $ | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "github-actions-runners.serviceAccountName" . }}
-      image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-      imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-      repository: "{{ .Values.config.githubRepository }}"
-      organization: "{{ .Values.config.githubOrganization }}"
-      {{- with .Values.config.labels }}
+      serviceAccountName: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
+      image: "{{ .image.repository | default $.Values.global.image.repository }}:{{ .image.tag | default $.Values.global.image.tag }}"
+      imagePullPolicy: "{{ .image.pullPolicy | default $.Values.global.image.pullPolicy }}"
+      {{- if .config.githubRepository }}
+      repository: "{{ .config.githubRepository }}"
+      {{- end }}
+      {{- if .config.githubOrganization }}
+      organization: "{{ .config.githubOrganization }}"
+      {{- end }}
+      {{- with .config.labels }}
       labels:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      ephemeral: "{{ .Values.config.ephemeral }}"
-      dockerEnabled: "{{ .Values.config.dockerEnabled }}"
-      dockerMTU: "{{ .Values.config.dockerMTU }}"
-      dockerRegistryMirror: "{{ .Values.config.dockerRegistryMirror }}"
-      dockerdWithinRunnerContainer: "{{ .Values.config.dockerdWithinRunnerContainer }}"
+      ephemeral: "{{ .config.ephemeral | default $.Values.global.config.ephemeral }}"
+      dockerEnabled: "{{ .config.dockerEnabled | default $.Values.global.config.dockerEnabled }}"
+      dockerMTU: "{{ .config.dockerMTU | default $.Values.global.config.dockerMTU }}"
+      dockerRegistryMirror: "{{ .config.dockerRegistryMirror | default $.Values.global.config.dockerRegistryMirror }}"
+      dockerdWithinRunnerContainer: "{{ .config.dockerdWithinRunnerContainer | default $.Values.global.config.dockerdWithinRunnerContainer }}"
       securityContext:
-        {{- toYaml .Values.securityContext | nindent 8 }}
-      {{- with .Values.nodeSelector }}
+        {{- toYaml .securityContext | nindent 8 }}
+      {{- with .nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       resources:
-        {{- toYaml .Values.resources | nindent 8 }}
+        {{- toYaml .resources | nindent 8 }}
+{{- end }}
+{{- end }}

@@ -1,14 +1,23 @@
-{{- if not .Values.autoscaling.enabled }}
+{{- range .Values.runnerDeployments }}
+---
+{{- $enabled := printf "%t" .enabled }}
+{{- if regexMatch "nil" $enabled }}{{- $enabled = "true" }}{{- end }}
+{{- if (eq $enabled "true") }}
+{{- if .autoscaling.enabled }}
 kind: HorizontalRunnerAutoscaler
+apiVersion: actions.summerwind.dev/v1alpha1
 metadata:
-  name: {{ include "github-actions-runners.fullname" . }}
+  name: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
   labels:
-    {{- include "github-actions-runners.labels" . | nindent 4 }}
+    github-actions-runner: {{ .name }}
+    {{- include "github-actions-runners.labels" $ | nindent 4 }}
 spec:
   scaleTargetRef:
-    name: {{ include "github-actions-runners.fullname" . }}
-  {{- with .Values.autoscaling.scaleUpTriggers }}
+    name: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
+  {{- with .autoscaling.scaleUpTriggers }}
   scaleUpTriggers:
   {{- toYaml . | nindent 4 }}
   {{- end }}
+{{- end }}
+{{- end }}
 {{- end }}
