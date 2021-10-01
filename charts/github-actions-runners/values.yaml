@@ -14,7 +14,6 @@ global:
     tag: "v2.281.1-ubuntu-20.04"
 
   podAnnotations: {}
-  podSecurityContext: {}
   securityContext: {}
   resources: {}
   nodeSelector: {}
@@ -27,6 +26,7 @@ global:
     dockerMTU: 1500
     dockerRegistryMirror: https://mirror.gcr.io/
     dockerdWithinRunnerContainer: true
+    labels: []
 
 runnerDeployments:
   - name: default
@@ -47,9 +47,6 @@ runnerDeployments:
       # If not set and create is true, a name is generated using the fullname template
 
     podAnnotations: {}
-
-    podSecurityContext: {}
-      # fsGroup: 2000
 
     securityContext: {}
       # capabilities:

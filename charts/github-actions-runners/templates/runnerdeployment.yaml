@@ -14,7 +14,7 @@ spec:
   replicas: {{ .replicaCount | default $.Values.global.replicaCount }}
   template:
     metadata:
-      {{- with .podAnnotations }}
+      {{- with (default $.Values.global.podAnnotations .podAnnotations) }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -31,7 +31,7 @@ spec:
       {{- if .config.githubOrganization }}
       organization: "{{ .config.githubOrganization }}"
       {{- end }}
-      {{- with .config.labels }}
+      {{- with (default $.Values.global.config.labels .config.labels )}}
       labels:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -41,7 +41,7 @@ spec:
       dockerRegistryMirror: "{{ .config.dockerRegistryMirror | default $.Values.global.config.dockerRegistryMirror }}"
       dockerdWithinRunnerContainer: {{ .config.dockerdWithinRunnerContainer | default $.Values.global.config.dockerdWithinRunnerContainer }}
       securityContext:
-        {{- toYaml .securityContext | nindent 8 }}
+        {{- toYaml (default $.Values.global.securityContext .securityContext )| nindent 8 }}
       {{- with (default $.Values.global.nodeSelector .nodeSelector )}}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
