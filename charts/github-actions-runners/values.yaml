@@ -12,6 +12,15 @@ global:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "v2.281.1-ubuntu-20.04"
+
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
   config:
     ephemeral: true
     dockerEnabled: false
@@ -21,7 +30,7 @@ global:
 
 runnerDeployments:
   - name: default
-    enabled: true
+    enabled: false
     replicaCount: 1
     image:
       repository: summerwind/actions-runner-dind
@@ -88,7 +97,7 @@ runnerDeployments:
     affinity: {}
 
     autoscaling:
-      enabled: true
+      enabled: false
       scaleUpTriggers:
       - githubEvent:
           checkRun:
