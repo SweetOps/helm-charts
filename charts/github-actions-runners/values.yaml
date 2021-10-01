@@ -17,7 +17,7 @@ global:
     dockerEnabled: false
     dockerMTU: 1500
     dockerRegistryMirror: https://mirror.gcr.io/
-    dockerdWithinRunnerContainer: true    
+    dockerdWithinRunnerContainer: true
 
 runnerDeployments:
   - name: default
@@ -97,4 +97,3 @@ runnerDeployments:
             status: "queued"
         amount: 1
         duration: "5m"
-
