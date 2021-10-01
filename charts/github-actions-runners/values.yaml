@@ -21,7 +21,7 @@ global:
 
 runnerDeployments:
   - name: default
-    enabled: false
+    enabled: true
     replicaCount: 1
     image:
       repository: summerwind/actions-runner-dind
@@ -89,7 +89,7 @@ runnerDeployments:
     affinity: {}
 
     autoscaling:
-      enabled: false
+      enabled: true
       scaleUpTriggers:
       - githubEvent:
           checkRun:
