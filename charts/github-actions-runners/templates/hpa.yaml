@@ -6,13 +6,13 @@
 {{- if .autoscaling.enabled }}
 kind: HorizontalRunnerAutoscaler
 metadata:
-  name: {{ include "github-actions-runners.fullname" . }}-{{ .name }}
+  name: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
   labels:
     github-actions-runner: {{ .name }}
-    {{- include "github-actions-runners.labels" . | nindent 4 }}
+    {{- include "github-actions-runners.labels" $ | nindent 4 }}
 spec:
   scaleTargetRef:
-    name: {{ include "github-actions-runners.fullname" . }}-{{ .name }}
+    name: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
   {{- with .autoscaling.scaleUpTriggers }}
   scaleUpTriggers:
   {{- toYaml . | nindent 4 }}

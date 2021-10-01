@@ -5,12 +5,12 @@
 {{- if (eq $enabled "true") }}
 kind: RunnerDeployment
 metadata:
-  name: {{ include "github-actions-runners.fullname" . }}-{{ .name }}
+  name: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
   labels:
     github-actions-runner: {{ .name }}
-    {{- include "github-actions-runners.labels" . | nindent 4 }}
+    {{- include "github-actions-runners.labels" $ | nindent 4 }}
 spec:
-  replicas: {{ .replicaCount | default .Values.global.replicaCount }}
+  replicas: {{ .replicaCount | default $.Values.global.replicaCount }}
   template:
     metadata:
       {{- with .podAnnotations }}
@@ -19,11 +19,11 @@ spec:
       {{- end }}
       labels:
         github-actions-runner: {{ .name }}
-        {{- include "github-actions-runners.selectorLabels" . | nindent 8 }}
+        {{- include "github-actions-runners.selectorLabels" $ | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "github-actions-runners.serviceAccountName" . }}-{{ .name }}
-      image: "{{ .image.repository | default .Values.global.image.repository }}:{{ .image.tag | default .Values.global.image.tag }}"
-      imagePullPolicy: "{{ .image.pullPolicy | default .Values.global.image.pullPolicy }}"
+      serviceAccountName: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
+      image: "{{ .image.repository | default $.Values.global.image.repository }}:{{ .image.tag | default $.Values.global.image.tag }}"
+      imagePullPolicy: "{{ .image.pullPolicy | default $.Values.global.image.pullPolicy }}"
       {{- if .config.githubRepository }}
       repository: "{{ .config.githubRepository }}"
       {{- end }}
@@ -34,11 +34,11 @@ spec:
       labels:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      ephemeral: "{{ .config.ephemeral | default .Values.global.config.ephemeral }}"
-      dockerEnabled: "{{ .config.dockerEnabled | default .Values.global.config.dockerEnabled }}"
-      dockerMTU: "{{ .config.dockerMTU | default .Values.global.config.dockerMTU }}"
-      dockerRegistryMirror: "{{ .config.dockerRegistryMirror | default .Values.global.config.dockerRegistryMirror }}"
-      dockerdWithinRunnerContainer: "{{ .config.dockerdWithinRunnerContainer | default .Values.global.config.dockerdWithinRunnerContainer }}"
+      ephemeral: "{{ .config.ephemeral | default $.Values.global.config.ephemeral }}"
+      dockerEnabled: "{{ .config.dockerEnabled | default $.Values.global.config.dockerEnabled }}"
+      dockerMTU: "{{ .config.dockerMTU | default $.Values.global.config.dockerMTU }}"
+      dockerRegistryMirror: "{{ .config.dockerRegistryMirror | default $.Values.global.config.dockerRegistryMirror }}"
+      dockerdWithinRunnerContainer: "{{ .config.dockerdWithinRunnerContainer | default $.Values.global.config.dockerdWithinRunnerContainer }}"
       securityContext:
         {{- toYaml .securityContext | nindent 8 }}
       {{- with .nodeSelector }}
