@@ -2,85 +2,99 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
-
-image:
-  repository: summerwind/actions-runner-dind
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "v2.281.1-ubuntu-20.04"
-
-imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
+global:
+  replicaCount: 1
+  image:
+    repository: summerwind/actions-runner-dind
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v2.281.1-ubuntu-20.04"
+  config:
+    ephemeral: true
+    dockerEnabled: false
+    dockerMTU: 1500
+    dockerRegistryMirror: https://mirror.gcr.io/
+    dockerdWithinRunnerContainer: true    
 
-podAnnotations:
-  cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+runnerDeployments:
+  - name: default
+    enabled: false
+    replicaCount: 1
+    image:
+      repository: summerwind/actions-runner-dind
+      pullPolicy: IfNotPresent
+      # Overrides the image tag whose default is the chart appVersion.
+      tag: "v2.281.1-ubuntu-20.04"
 
-podSecurityContext: {}
-  # fsGroup: 2000
+    serviceAccount:
+      # Specifies whether a service account should be created
+      create: true
+      # Annotations to add to the service account
+      annotations: {}
+      # The name of the service account to use.
+      # If not set and create is true, a name is generated using the fullname template
+      name: ""
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+    podAnnotations: {}
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+    podSecurityContext: {}
+      # fsGroup: 2000
 
-config:
-  # The runner restarts after running jobs, to ensure a clean and reproducible build environment
-  ephemeral: true
-  githubOrganization: ""
-  githubRepository: ""
-  # Runner Labels
-  labels: []
-  # true  = A privileged docker sidecar container is included in the runner pod.
-  # false = A docker sidecar container is not included in the runner pod and you can't use docker.
-  # If set to false, there are no privileged container and you cannot use docker.
-  dockerEnabled: false
-  # Optional Docker containers network MTU
-  dockerMTU: 1500
-  # Optional Docker registry mirror
-  dockerRegistryMirror: https://mirror.gcr.io/
-  # false = Docker support is provided by a sidecar container deployed in the runner pod.
-  # true  = No docker sidecar container is deployed in the runner pod but docker can be used within the runner container instead. The image summerwind/actions-runner-dind is used by default.
-  dockerdWithinRunnerContainer: true
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
 
+    resources: {}
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+      # requests:
+      #   cpu: 100m
+      #   memory: 128Mi
 
-autoscaling:
-  enabled: false
-  scaleUpTriggers:
-  - githubEvent:
-      checkRun:
-        types: ["created"]
-        status: "queued"
-    amount: 1
-    duration: "5m"
+    config:
+      # The runner restarts after running jobs, to ensure a clean and reproducible build environment
+      ephemeral: true
+      githubOrganization: ""
+      githubRepository: ""
+      # Runner Labels
+      labels: []
+      # true  = A privileged docker sidecar container is included in the runner pod.
+      # false = A docker sidecar container is not included in the runner pod and you can't use docker.
+      # If set to false, there are no privileged container and you cannot use docker.
+      dockerEnabled: false
+      # Optional Docker containers network MTU
+      dockerMTU: 1500
+      # Optional Docker registry mirror
+      dockerRegistryMirror: https://mirror.gcr.io/
+      # false = Docker support is provided by a sidecar container deployed in the runner pod.
+      # true  = No docker sidecar container is deployed in the runner pod but docker can be used within the runner container instead. The image summerwind/actions-runner-dind is used by default.
+      dockerdWithinRunnerContainer: true
 
-nodeSelector: {}
+    nodeSelector: {}
 
-tolerations: []
+    tolerations: []
 
-affinity: {}
+    affinity: {}
+
+    autoscaling:
+      enabled: false
+      scaleUpTriggers:
+      - githubEvent:
+          checkRun:
+            types: ["created"]
+            status: "queued"
+        amount: 1
+        duration: "5m"
+
