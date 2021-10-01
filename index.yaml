@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   github-actions-runners:
   - apiVersion: v2
+    created: "2021-10-01T15:19:26.766395992Z"
+    description: A Helm chart for provisioning Github Actions runners
+    digest: 10f7b0a83141e62b18b0cbf8d2db9d4e0b31a763c301c7575570620daba0c9f4
+    maintainers:
+    - name: SweetOps
+    name: github-actions-runners
+    type: application
+    urls:
+    - https://github.com/SweetOps/helm-charts/releases/download/github-actions-runners-0.0.3/github-actions-runners-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
     created: "2021-09-07T12:05:55.27914114Z"
     description: A Helm chart for provisioning Github Actions runners
     digest: bed3478774458adaecd1925e4b26da94e3fa0b0a0dad1ca1aac66b9f492f133c
@@ -12,4 +23,4 @@ entries:
     urls:
     - https://github.com/SweetOps/helm-charts/releases/download/github-actions-runners-0.0.2/github-actions-runners-0.0.2.tgz
     version: 0.0.2
-generated: "2021-09-07T12:05:55.27914704Z"
+generated: "2021-10-01T15:19:26.766404993Z"
