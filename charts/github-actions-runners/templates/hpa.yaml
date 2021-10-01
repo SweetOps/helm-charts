@@ -5,6 +5,7 @@
 {{- if (eq $enabled "true") }}
 {{- if .autoscaling.enabled }}
 kind: HorizontalRunnerAutoscaler
+apiVersion: actions.summerwind.dev/v1alpha1
 metadata:
   name: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
   labels:

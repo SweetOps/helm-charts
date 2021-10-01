@@ -4,6 +4,7 @@
 {{- if regexMatch "nil" $enabled }}{{- $enabled = "true" }}{{- end }}
 {{- if (eq $enabled "true") }}
 kind: RunnerDeployment
+apiVersion: actions.summerwind.dev/v1alpha1
 metadata:
   name: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
   labels:
