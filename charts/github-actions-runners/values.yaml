@@ -6,22 +6,46 @@ nameOverride: ""
 fullnameOverride: ""
 
 global:
-  replicaCount: 1
+  replicaCount: 0
   image:
     repository: summerwind/actions-runner-dind
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "v2.281.1-ubuntu-20.04"
+
+  podAnnotations: {}
+  securityContext: {}
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+
   config:
     ephemeral: true
     dockerEnabled: false
     dockerMTU: 1500
     dockerRegistryMirror: https://mirror.gcr.io/
     dockerdWithinRunnerContainer: true
+    labels: []
+
+  autoscaling:
+    minReplicas: 0
+    maxReplicas: 3
+    metrics: []
+    scaleUpTriggers: []
+
 
 runnerDeployments:
   - name: default
-    enabled: true
+    enabled: false
     replicaCount: 1
     image:
       repository: summerwind/actions-runner-dind
@@ -38,9 +62,6 @@ runnerDeployments:
       # If not set and create is true, a name is generated using the fullname template
 
     podAnnotations: {}
-
-    podSecurityContext: {}
-      # fsGroup: 2000
 
     securityContext: {}
       # capabilities:
@@ -88,7 +109,7 @@ runnerDeployments:
     affinity: {}
 
     autoscaling:
-      enabled: true
+      enabled: false
       scaleUpTriggers:
       - githubEvent:
           checkRun:
