@@ -35,7 +35,7 @@ global:
     dockerRegistryMirror: https://mirror.gcr.io/
     dockerdWithinRunnerContainer: true
     labels: []
-  
+
   autoscaling:
     minReplicas: 0
     maxReplicas: 3
