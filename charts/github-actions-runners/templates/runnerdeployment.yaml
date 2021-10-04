@@ -3,6 +3,10 @@
 {{- $enabled := printf "%t" .enabled }}
 {{- if regexMatch "nil" $enabled }}{{- $enabled = "true" }}{{- end }}
 {{- if (eq $enabled "true") }}
+{{- $imageSpec := .image | default dict }}
+{{- $repository := $imageSpec.repository | default $.Values.global.image.repository }}
+{{- $tag := $imageSpec.tag | default $.Values.global.image.tag }}
+{{- $pullPolicy := $imageSpec.pullPolicy | default $.Values.global.image.pullPolicy }}
 kind: RunnerDeployment
 apiVersion: actions.summerwind.dev/v1alpha1
 metadata:
@@ -23,8 +27,8 @@ spec:
         {{- include "github-actions-runners.selectorLabels" $ | nindent 8 }}
     spec:
       serviceAccountName: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
-      image: "{{ .image.repository | default $.Values.global.image.repository }}:{{ .image.tag | default $.Values.global.image.tag }}"
-      imagePullPolicy: "{{ .image.pullPolicy | default $.Values.global.image.pullPolicy }}"
+      image: {{ printf "%s:%s" $repository $tag }}
+      imagePullPolicy: {{ $pullPolicy }}
       {{- if .config.githubRepository }}
       repository: "{{ .config.githubRepository }}"
       {{- end }}

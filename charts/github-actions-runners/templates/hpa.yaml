@@ -3,7 +3,13 @@
 {{- $enabled := printf "%t" .enabled }}
 {{- if regexMatch "nil" $enabled }}{{- $enabled = "true" }}{{- end }}
 {{- if (eq $enabled "true") }}
-{{- if .autoscaling.enabled }}
+{{- $autoscaling := .autoscaling | default dict }}
+{{- $autoscalingEnabled := $autoscaling.enabled | default false }}
+{{- $minReplicas := $autoscaling.minReplicas | default $.Values.global.autoscaling.minReplicas }}
+{{- $maxReplicas := $autoscaling.maxReplicas | default $.Values.global.autoscaling.maxReplicas }}
+{{- $scaleUpTriggers := $autoscaling.scaleUpTriggers | default $.Values.global.autoscaling.scaleUpTriggers }}
+{{- $metrics := $autoscaling.metrics | default $.Values.global.autoscaling.metrics }}
+{{- if $autoscalingEnabled }}
 kind: HorizontalRunnerAutoscaler
 apiVersion: actions.summerwind.dev/v1alpha1
 metadata:
@@ -12,12 +18,19 @@ metadata:
     github-actions-runner: {{ .name }}
     {{- include "github-actions-runners.labels" $ | nindent 4 }}
 spec:
+  minReplicas: {{ $minReplicas }}
+  maxReplicas: {{ $maxReplicas }}
   scaleTargetRef:
     name: {{ include "github-actions-runners.fullname" $ }}-{{ .name }}
-  {{- with .autoscaling.scaleUpTriggers }}
+  {{- with $scaleUpTriggers }}
   scaleUpTriggers:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $metrics }}
+  metrics:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
+
