@@ -17,7 +17,7 @@ imagePullSecrets: []
 
 config:
   localDnsIp: 169.254.20.11
-  kubeDnsIp: "" #172.20.0.10
+  kubeDnsIp: ""
   zones:
     - zone: .:53
       plugins:
@@ -41,13 +41,13 @@ config:
             # percentage: 20%
           serve_stale: false
         forward:
-          parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+          parameters: __PILLAR__UPSTREAM__SERVERS__
           force_tcp: false
           prefer_udp: false
-          policy: "" # random|round_robin|sequential
-          max_fails: "" # 10
-          expire: "" # 10s
-          health_check: "" # 10s
+          policy: ""
+          max_fails: ""
+          expire: ""
+          health_check: ""
         prometheus: true
         health:
           port: 8080
@@ -62,7 +62,7 @@ config:
         cache:
           parameters: 30
         forward:
-          parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+          parameters: __PILLAR__UPSTREAM__SERVERS__
           force_tcp: false
         prometheus: true
         health:
@@ -78,7 +78,7 @@ config:
         cache:
           parameters: 30
         forward:
-          parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+          parameters: __PILLAR__UPSTREAM__SERVERS__
           force_tcp: false
         prometheus: true
         health:
