@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "node-local-dns.fullname" . }}
+  annotations:
+    prometheus.io/scrape: {{ .Values.metrics.prometheusScrape | quote }}
+    prometheus.io/port: {{ .Values.metrics.port | quote }}
+  labels:
+    {{- include "node-local-dns.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  ports:
+    - name: metrics
+      port: 9253
+      targetPort: 9253
+  selector:
+    {{- include "node-local-dns.selectorLabels" . | nindent 4 }}
