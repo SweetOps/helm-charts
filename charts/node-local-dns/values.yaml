@@ -8,10 +8,10 @@ image:
     healthPort: 8080
     skipTeardown: true
     syncInterval: 1ns
-#    setupIptables: false
-#    setupEbtables: false
-#    quiet: false
-#    upstreamSvc: kube-dns
+    # setupIptables: false
+    # setupEbtables: false
+    # quiet: false
+    # upstreamSvc: kube-dns
 
 imagePullSecrets: []
 
@@ -126,6 +126,6 @@ metrics:
 
 serviceMonitor:
   enabled: false
-  namespace: monitoring
+  # namespace: monitoring
   timeout: 10s
   interval: 30s
