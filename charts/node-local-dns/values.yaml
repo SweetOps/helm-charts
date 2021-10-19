@@ -1,0 +1,131 @@
+---
+image:
+  repository: k8s.gcr.io/dns/k8s-dns-node-cache
+  pullPolicy: IfNotPresent
+  tag: 1.17.4
+  args:
+    interfaceName: nodelocaldns
+    healthPort: 8080
+    skipTeardown: true
+    syncInterval: 1ns
+    # setupIptables: false
+    # setupEbtables: false
+    # quiet: false
+    # upstreamSvc: kube-dns
+
+imagePullSecrets: []
+
+config:
+  localDnsIp: 169.254.20.11
+  kubeDnsIp: ""
+  zones:
+    - zone: .:53
+      plugins:
+        errors: true
+        reload: true
+        debug: false
+        log:
+          format: combined
+          classes: all
+        cache:
+          parameters: 30
+          denial: {}
+            # size: 0
+            # ttl: 1
+          success: {}
+            # size: 8192
+            # ttl: 30
+          prefetch: {}
+            # amount: 1
+            # duration: 10m
+            # percentage: 20%
+          serve_stale: false
+        forward:
+          parameters: __PILLAR__UPSTREAM__SERVERS__
+          force_tcp: false
+          prefer_udp: false
+          policy: ""
+          max_fails: ""
+          expire: ""
+          health_check: ""
+        prometheus: true
+        health:
+          port: 8080
+    - zone: ip6.arpa:53
+      plugins:
+        errors: true
+        reload: true
+        debug: false
+        log:
+          format: combined
+          classes: all
+        cache:
+          parameters: 30
+        forward:
+          parameters: __PILLAR__UPSTREAM__SERVERS__
+          force_tcp: false
+        prometheus: true
+        health:
+          port: 8080
+    - zone: in-addr.arpa:53
+      plugins:
+        errors: true
+        reload: true
+        debug: false
+        log:
+          format: combined
+          classes: all
+        cache:
+          parameters: 30
+        forward:
+          parameters: __PILLAR__UPSTREAM__SERVERS__
+          force_tcp: false
+        prometheus: true
+        health:
+          port: 8080
+
+useHostNetwork: true
+
+updateStrategy:
+  rollingUpdate:
+    maxUnavailable: 10%
+
+priorityClassName: system-node-critical
+podAnnotations: {}
+podSecurityContext: {}
+
+securityContext:
+  privileged: true
+
+readinessProbe:
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+nodeSelector: {}
+affinity: {}
+
+tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+  - effect: NoExecute
+    operator: Exists
+  - effect: NoSchedule
+    operator: Exists
+
+resources:
+  requests:
+    cpu: 30m
+    memory: 50Mi
+
+metrics:
+  prometheusScrape: "true"
+  port: 9253
+
+serviceMonitor:
+  enabled: false
+  # namespace: monitoring
+  timeout: 10s
+  interval: 30s

@@ -1,0 +1,21 @@
+{{- if .Values.serviceMonitor.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "node-local-dns.fullname" . }}
+{{- if .Values.serviceMonitor.namespace }}
+  namespace: {{ .Values.serviceMonitor.namespace }}
+{{- end }}
+spec:
+  endpoints:
+  - port: metrics
+    scrapeTimeout: {{ .Values.serviceMonitor.timeout }}
+    interval: {{ .Values.serviceMonitor.interval }}
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "node-local-dns.selectorLabels" . | nindent 6 }}
+{{- end }}
