@@ -82,7 +82,7 @@ spec:
 {{- if .Values.prometheusRule.additionalRuleLabels }}
 {{ toYaml .Values.prometheusRule.additionalRuleLabels | indent 8 }}
 {{- end }}
-  - name: coredns-forward.rules
+  - name: nodelocaldns-forward.rules
     rules:
     - alert: NodeLocalDNSForwardLatencyHigh
       annotations:
