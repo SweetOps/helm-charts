@@ -48,6 +48,26 @@ entries:
   node-local-dns:
   - apiVersion: v2
     appVersion: 1.17.4
+    created: "2021-12-01T13:19:43.809949333Z"
+    description: NodeLocal DNS Cache helm chart
+    digest: 2795fb3584b84621ee153548b0143b94095cb80a0bd78c7a21cf1fdafe8db967
+    keywords:
+    - node
+    - dns
+    - cache
+    - kubernetes
+    maintainers:
+    - name: SweetOps
+    name: node-local-dns
+    sources:
+    - https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/dns/nodelocaldns
+    - https://github.com/lablabs/k8s-nodelocaldns-helm
+    type: application
+    urls:
+    - https://github.com/SweetOps/helm-charts/releases/download/node-local-dns-0.2.0/node-local-dns-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.17.4
     created: "2021-10-19T15:30:47.627589155Z"
     description: NodeLocal DNS Cache helm chart
     digest: f67698c642219b270a99f966b4b0e5848d7f14fce5827fed84a2b367fe053f96
@@ -66,4 +86,4 @@ entries:
     urls:
     - https://github.com/SweetOps/helm-charts/releases/download/node-local-dns-0.1.0/node-local-dns-0.1.0.tgz
     version: 0.1.0
-generated: "2021-10-19T15:30:47.627603056Z"
+generated: "2021-12-01T13:19:43.809968233Z"
