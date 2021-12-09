@@ -1,0 +1,32 @@
+{{if .Values.webhook.certManager.issuerSecretName -}}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: webhook-issuer
+  namespace: {{ .Values.namespace }}
+spec:
+  ca:
+    secretName: {{ .Values.webhook.certManager.issuerSecretName }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: jaeger-injector
+  namespace: {{ .Values.namespace }}
+spec:
+  secretName: jaeger-injector-k8s-tls
+  duration: {{ .Values.webhook.certManager.duration }}
+  renewBefore: {{ .Values.webhook.certManager.renewBefore }}
+  issuerRef:
+    name: webhook-issuer
+    kind: Issuer
+  commonName: jaeger-injector.linkerd.svc
+  dnsNames:
+  - jaeger-injector.linkerd.svc
+  isCA: false
+  privateKey:
+    algorithm: ECDSA
+  usages:
+  - server auth
+{{ end -}}
