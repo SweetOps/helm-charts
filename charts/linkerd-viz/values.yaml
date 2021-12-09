@@ -157,9 +157,13 @@ tap:
   caBundle: |
 
   certManager:
-    issuerSecretName: ""
+    enabled: false
     duration: 1440h
     renewBefore: 1400h
+
+    tlsCrt: |
+
+    tlsKey: |
 
   resources:
     cpu:

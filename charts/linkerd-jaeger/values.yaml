@@ -106,9 +106,13 @@ webhook:
   caBundle: |
 
   certManager:
-    issuerSecretName: ""
+    enabled: false
     duration: 1440h
     renewBefore: 1400h
+
+    tlsCrt: |
+
+    tlsKey: |
 
   # -- collector service address for the proxies to send trace data.
   # Points by default to the the linkerd-jaeger collector
