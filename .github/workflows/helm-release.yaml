@@ -28,7 +28,7 @@ jobs:
 
       - name: helm deps
         run: |
-          helm dependency build helm-charts/charts/linkerd-jaeger
+          helm dependency build charts/linkerd-jaeger
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.1
         env:
