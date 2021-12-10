@@ -1,0 +1,55 @@
+{{ if .Values.identity.certManager.enabled -}}
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: linkerd-trust-anchor
+  namespace: {{ .Values.namespace }}
+  labels:
+    linkerd.io/control-plane-component: identity
+    linkerd.io/control-plane-ns: {{.Values.namespace}}
+  annotations:
+    {{ include "partials.annotations.created-by" . }}
+data:
+  tls.crt: {{ b64enc (.Values.identity.certManager.tlsCrt | trim )}}
+  tls.key: {{ b64enc (.Values.identity.certManager.tlsKey | trim )}}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: linkerd-trust-anchor
+  namespace: {{ .Values.namespace }}
+  labels:
+    linkerd.io/control-plane-component: identity
+    linkerd.io/control-plane-ns: {{.Values.namespace}}
+spec:
+  ca:
+    secretName: linkerd-trust-anchor
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-identity-issuer
+  namespace: {{ .Values.namespace }}
+  labels:
+    linkerd.io/control-plane-component: identity
+    linkerd.io/control-plane-ns: {{.Values.namespace}}
+spec:
+  secretName: linkerd-identity-issuer
+  duration: {{ .Values.identity.certManager.duration }}
+  renewBefore: {{ .Values.identity.certManager.renewBefore }}
+  issuerRef:
+    name: linkerd-trust-anchor
+    kind: Issuer
+  commonName: identity.linkerd.cluster.local
+  dnsNames:
+  - identity.linkerd.cluster.local
+  isCA: true
+  privateKey:
+    algorithm: ECDSA
+  usages:
+  - cert sign
+  - crl sign
+  - server auth
+  - client auth
+{{ end -}}

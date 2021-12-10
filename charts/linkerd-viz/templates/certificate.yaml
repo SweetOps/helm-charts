@@ -1,0 +1,82 @@
+{{if .Values.tap.certManager.enabled -}}
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: webhook-issuer-tls
+  namespace: {{ .Values.namespace }}
+  labels:
+    linkerd.io/control-plane-component: proxy-injector
+    linkerd.io/control-plane-ns: {{ .Values.namespace }}
+  annotations:
+    {{ include "partials.annotations.created-by" . }}
+data:
+  tls.crt: {{ b64enc (.Values.tap.certManager.tlsCrt | trim )}}
+  tls.key: {{ b64enc (.Values.tap.certManager.tlsKey | trim )}}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: webhook-issuer
+  namespace: {{ .Values.namespace }}
+  labels:
+    linkerd.io/extension: viz
+    component: tap-injector
+  annotations:
+    {{ include "partials.annotations.created-by" . }}
+spec:
+  ca:
+    secretName: webhook-issuer-tls
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tap
+  namespace: {{ .Values.namespace }}
+  labels:
+    linkerd.io/extension: viz
+    component: tap
+  annotations:
+    {{ include "partials.annotations.created-by" . }}
+spec:
+  secretName: tap-k8s-tls
+  duration: {{ .Values.tap.certManager.duration }}
+  renewBefore: {{ .Values.tap.certManager.renewBefore }}
+  issuerRef:
+    name: webhook-issuer
+    kind: Issuer
+  commonName: tap.linkerd-viz.svc
+  dnsNames:
+  - tap.linkerd-viz.svc
+  isCA: false
+  privateKey:
+    algorithm: ECDSA
+  usages:
+  - server auth
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-tap-injector
+  namespace: {{ .Values.namespace }}
+  labels:
+    linkerd.io/extension: viz
+    component: tap-injector
+  annotations:
+    {{ include "partials.annotations.created-by" . }}
+spec:
+  secretName: tap-injector-k8s-tls
+  duration: {{ .Values.tapInjector.certManager.duration }}
+  renewBefore: {{ .Values.tapInjector.certManager.renewBefore }}
+  issuerRef:
+    name: webhook-issuer
+    kind: Issuer
+  commonName: tap-injector.linkerd-viz.svc
+  dnsNames:
+  - tap-injector.linkerd-viz.svc
+  isCA: false
+  privateKey:
+    algorithm: ECDSA
+  usages:
+  - server auth
+{{ end -}}

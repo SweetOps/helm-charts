@@ -1,0 +1,76 @@
+{{ if .Values.proxyInjector.certManager.enabled -}}
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: webhook-issuer-tls
+  namespace: {{ .Values.namespace }}
+  labels:
+    linkerd.io/control-plane-component: proxy-injector
+    linkerd.io/control-plane-ns: {{ .Values.namespace }}
+  annotations:
+    {{ include "partials.annotations.created-by" . }}
+data:
+  tls.crt: {{ b64enc (.Values.proxyInjector.certManager.tlsCrt | trim )}}
+  tls.key: {{ b64enc (.Values.proxyInjector.certManager.tlsKey | trim )}}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: webhook-issuer
+  namespace: {{ .Values.namespace }}
+  labels:
+    linkerd.io/control-plane-component: proxy-injector
+    linkerd.io/control-plane-ns: {{ .Values.namespace }}
+spec:
+  ca:
+    secretName: webhook-issuer-tls
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-proxy-injector
+  namespace: {{ .Values.namespace }}
+  labels:
+    linkerd.io/control-plane-component: proxy-injector
+    linkerd.io/control-plane-ns: {{ .Values.namespace }}
+spec:
+  secretName: linkerd-proxy-injector-k8s-tls
+  duration: {{ .Values.proxyInjector.certManager.duration }}
+  renewBefore: {{ .Values.proxyInjector.certManager.renewBefore }}
+  issuerRef:
+    name: webhook-issuer
+    kind: Issuer
+  commonName: linkerd-proxy-injector.linkerd.svc
+  dnsNames:
+  - linkerd-proxy-injector.linkerd.svc
+  isCA: false
+  privateKey:
+    algorithm: ECDSA
+  usages:
+  - server auth
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-sp-validator
+  namespace: {{ .Values.namespace }}
+  labels:
+    linkerd.io/control-plane-component: proxy-injector
+    linkerd.io/control-plane-ns: {{ .Values.namespace }}
+spec:
+  secretName: linkerd-sp-validator-k8s-tls
+  duration: {{ .Values.profileValidator.certManager.duration }}
+  renewBefore: {{ .Values.profileValidator.certManager.renewBefore }}
+  issuerRef:
+    name: webhook-issuer
+    kind: Issuer
+  commonName: linkerd-sp-validator.linkerd.svc
+  dnsNames:
+  - linkerd-sp-validator.linkerd.svc
+  isCA: false
+  privateKey:
+    algorithm: ECDSA
+  usages:
+  - server auth
+{{ end -}}
