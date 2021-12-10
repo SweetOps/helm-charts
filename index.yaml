@@ -45,6 +45,84 @@ entries:
     urls:
     - https://github.com/SweetOps/helm-charts/releases/download/github-actions-runners-0.0.2/github-actions-runners-0.0.2.tgz
     version: 0.0.2
+  linkerd-jaeger:
+  - apiVersion: v1
+    appVersion: stable-2.11.1
+    created: "2021-12-10T12:32:00.597083279Z"
+    dependencies:
+    - name: partials
+      repository: file://../partials
+      version: 0.1.0
+    description: 'The Linkerd-Jaeger extension adds distributed tracing to Linkerd
+      using OpenCensus and Jaeger. '
+    digest: 2e9ca75aac02f578d13bb782747e2299a54748132a2acc1c0ce3ce79bb16f7f3
+    home: https://linkerd.io
+    icon: https://linkerd.io/images/logo-only-200h.png
+    keywords:
+    - service-mesh
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: cncf-linkerd-dev@lists.cncf.io
+      name: linkerd
+      url: https://linkerd.io/
+    name: linkerd-jaeger
+    sources:
+    - https://github.com/linkerd/linkerd2/
+    urls:
+    - https://github.com/SweetOps/helm-charts/releases/download/linkerd-jaeger-0.1.2/linkerd-jaeger-0.1.2.tgz
+    version: 0.1.2
+  linkerd-viz:
+  - apiVersion: v1
+    appVersion: stable-2.11.1
+    created: "2021-12-10T12:32:00.873058299Z"
+    dependencies:
+    - name: partials
+      repository: file://../partials
+      version: 0.1.0
+    description: 'The Linkerd-Viz extension contains observability and visualization
+      components for Linkerd. '
+    digest: 36d376794ef2c2f1d6640d671ce1972cab6330885140543995745b88aee0695a
+    home: https://linkerd.io
+    icon: https://linkerd.io/images/logo-only-200h.png
+    keywords:
+    - service-mesh
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: cncf-linkerd-dev@lists.cncf.io
+      name: linkerd
+      url: https://linkerd.io/
+    name: linkerd-viz
+    sources:
+    - https://github.com/linkerd/linkerd2/
+    urls:
+    - https://github.com/SweetOps/helm-charts/releases/download/linkerd-viz-0.1.1/linkerd-viz-0.1.1.tgz
+    version: 0.1.1
+  linkerd2:
+  - apiVersion: v1
+    appVersion: stable-2.11.1
+    created: "2021-12-10T12:32:01.104282548Z"
+    dependencies:
+    - name: partials
+      repository: file://../partials
+      version: 0.1.0
+    description: 'Linkerd gives you observability, reliability, and security for your
+      microservices — with no code change required. '
+    digest: 046d077690fb4718f99016c61c0e411a48deddeeaf5984a188049affc45e7325
+    home: https://linkerd.io
+    icon: https://linkerd.io/images/logo-only-200h.png
+    keywords:
+    - service-mesh
+    kubeVersion: '>=1.17.0-0'
+    maintainers:
+    - email: cncf-linkerd-dev@lists.cncf.io
+      name: linkerd
+      url: https://linkerd.io/
+    name: linkerd2
+    sources:
+    - https://github.com/linkerd/linkerd2/
+    urls:
+    - https://github.com/SweetOps/helm-charts/releases/download/linkerd2-0.1.1/linkerd2-0.1.1.tgz
+    version: 0.1.1
   node-local-dns:
   - apiVersion: v2
     appVersion: 1.17.4
@@ -86,4 +164,14 @@ entries:
     urls:
     - https://github.com/SweetOps/helm-charts/releases/download/node-local-dns-0.1.0/node-local-dns-0.1.0.tgz
     version: 0.1.0
-generated: "2021-12-01T13:19:43.809968233Z"
+  partials:
+  - apiVersion: v1
+    created: "2021-12-10T12:32:01.474993406Z"
+    description: 'A Helm chart containing Linkerd partial templates, depended by the
+      ''linkerd'' and ''patch'' charts. '
+    digest: 0ffefc41abe1a9718e6c50db3172747be2db1d9c2a2baec11876ee3748ac4c75
+    name: partials
+    urls:
+    - https://github.com/SweetOps/helm-charts/releases/download/partials-0.1.0/partials-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-12-10T12:32:01.475011906Z"
