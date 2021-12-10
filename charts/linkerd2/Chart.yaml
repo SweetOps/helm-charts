@@ -10,7 +10,7 @@ keywords:
 kubeVersion: '>=1.17.0-0'
 maintainers:
 - email: cncf-linkerd-dev@lists.cncf.io
-  name: Linkerd authors
+  name: linkerd
   url: https://linkerd.io/
 name: linkerd2
 sources:
