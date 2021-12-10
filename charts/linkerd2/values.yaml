@@ -206,10 +206,10 @@ controllerUID: 2103
 # set resources for the sp-validator and its linkerd proxy respectively
 # see proxy.resources for details.
 # destinationResources -- CPU and Memory resources required by destination (see `proxy.resources` for sub-fields)
-#destinationResources:
-#destinationProxyResources -- CPU and Memory resources required by proxy
+# destinationResources:
+# destinationProxyResources -- CPU and Memory resources required by proxy
 # injected into destination pod (see `proxy.resources` for sub-fields)
-#destinationProxyResources:
+# destinationProxyResources:
 
 # debug configuration
 debugContainer:
@@ -255,9 +255,9 @@ identity:
 
 
 # -|- CPU and Memory resources required by the identity controller (see `proxy.resources` for sub-fields)
-#identityResources:
+# identityResources:
 # -|- CPU and Memory resources required by proxy injected into identity pod (see `proxy.resources` for sub-fields)
-#identityProxyResources:
+# identityProxyResources:
 
 # heartbeat configuration
 # disableHeartBeat -- Set to true to not start the heartbeat cronjob
@@ -299,11 +299,11 @@ proxyInjector:
   caBundle: |
 
 # -|- CPU and Memory resources required by the proxy injector (see
-#`proxy.resources` for sub-fields)
-#proxyInjectorResources:
-#-|- CPU and Memory resources required by proxy injected into the proxy injector
-#pod (see `proxy.resources` for sub-fields)
-#proxyInjectorProxyResources:
+# `proxy.resources` for sub-fields)
+# proxyInjectorResources:
+# -|- CPU and Memory resources required by proxy injected into the proxy injector
+# pod (see `proxy.resources` for sub-fields)
+# proxyInjectorProxyResources:
 
 # service profile validator configuration
 profileValidator:
@@ -363,8 +363,8 @@ policyValidator:
   caBundle: |
 
 # -|- CPU and Memory resources required by the SP validator (see
-#`proxy.resources` for sub-fields)
-#spValidatorResources:
+# `proxy.resources` for sub-fields)
+# spValidatorResources:
 
 # If the namespace is controlled by an external tool or can't be installed with Helm
 # you can disable its installation. In this case:
@@ -385,9 +385,9 @@ nodeSelector:
 # -|- Tolerations section, See the
 # [K8S documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 # for more information
-#tolerations:
+# tolerations:
 
 monitoring:
   enabled: false
-  type: prometheus-operator # victoria-metrics
-
+  type: prometheus-operator
+  # type: victoria-metrics

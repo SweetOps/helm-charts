@@ -314,7 +314,7 @@ grafana:
   logLevel: ""
   # -- log format (plain, json) of the grafana instance
   # @default -- defaultLogFormat
-  logFormat: ""  
+  logFormat: ""
   image:
     # -- Docker registry for the grafana instance
     # @default -- defaultRegistry
@@ -459,7 +459,7 @@ prometheus:
   ### As such, please refer to https://linkerd.io/2/tasks/exporting-metrics/ for the recommended approach to metrics data retention.
   # if enabled, creates a persistent volume claim for prometheus data
   # https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims
-  #persistence:
+  # persistence:
   # -- Storage class used to create prometheus data PV.
   #  storageClass:
   # -- PVC access mode.

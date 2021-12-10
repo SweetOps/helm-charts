@@ -128,12 +128,12 @@ webhook:
   logLevel: info
 
   namespaceSelector:
-    #matchExpressions:
-    #- key: runlevel
+    # matchExpressions:
+    # - key: runlevel
     #  operator: NotIn
     #  values: ["0","1"]
   objectSelector:
-    #matchLabels:
+    # matchLabels:
     #  foo: bar
 
   # -- NodeSelector section, See the
