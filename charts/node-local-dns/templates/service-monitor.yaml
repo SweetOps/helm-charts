@@ -7,6 +7,8 @@ metadata:
 {{- if .Values.serviceMonitor.namespace }}
   namespace: {{ .Values.serviceMonitor.namespace }}
 {{- end }}
+  labels:
+    {{- include "node-local-dns.labels" . | nindent 4 }}
 spec:
   endpoints:
   - port: metrics

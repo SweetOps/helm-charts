@@ -129,3 +129,8 @@ serviceMonitor:
   # namespace: monitoring
   timeout: 10s
   interval: 30s
+
+prometheusRule:
+  enabled: false
+  # namespace: monitoring
+  additionalRuleLabels: {}
