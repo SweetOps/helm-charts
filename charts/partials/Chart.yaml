@@ -3,4 +3,8 @@ description: |
   A Helm chart containing Linkerd partial templates,
   depended by the 'linkerd' and 'patch' charts.
 name: partials
-version: 0.1.0
+version: 0.2.0
+maintainers:
+- email: cncf-linkerd-dev@lists.cncf.io
+  name: linkerd
+  url: https://linkerd.io/
