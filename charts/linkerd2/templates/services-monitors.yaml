@@ -16,11 +16,11 @@
 {{- if eq .Values.monitoring.type "prometheus-operator" }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
-{{ else if eq .Values.monitoring.type "victoria-metrics" }}
+{{- else if eq .Values.monitoring.type "victoria-metrics" }}
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMServiceScrape
-{{ end }}
-{{ end }}
+{{- end }}
+{{- end }}
 {{ if .Values.monitoring.enabled }}
 ---
 {{- template "monitoringType" . }}
