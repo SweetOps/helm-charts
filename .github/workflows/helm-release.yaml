@@ -21,11 +21,6 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: helm deps
-        run: |
-          rm -rf /usr/local/bin/helm
-          helm version
-
       - name: Set up Helm
         uses: azure/setup-helm@v1
         with:
