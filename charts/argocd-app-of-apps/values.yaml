@@ -7,10 +7,14 @@ projectName: default
 
 annotations: {}
 
+syncOptions: {}
+  # CreateNamespace: true
+  # Replace: false
+
 syncPolicy:
   prune: true
   selfHeal: true
-  allowEmpty: true
+  # allowEmpty: true
 
 applications: []
   # - name: prometheus

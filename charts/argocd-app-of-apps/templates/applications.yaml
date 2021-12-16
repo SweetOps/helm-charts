@@ -25,9 +25,17 @@ spec:
     helm:
       values: | {{ nindent 8 (toYaml .values) }}
 {{- end }}
+{{- if $.Values.syncPolicy }}
   syncPolicy:
     automated:
-      prune: {{ $.Values.syncPolicy.prune }}
-      selfHeal: {{ $.Values.syncPolicy.selfHeal }}
-      allowEmpty: {{ $.Values.syncPolicy.allowEmpty }}
+      {{- with $.Values.syncPolicy }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+{{- end }}
+{{- if and $.Values.syncOptions $.Values.syncPolicy }}
+    syncOptions:
+{{- range $name, $value := $.Values.syncOptions }}
+      - {{ $name }}={{ $value }}
+{{- end }}
+{{- end }}
 {{- end }}
