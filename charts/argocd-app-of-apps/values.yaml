@@ -1,0 +1,23 @@
+nameOverride: ""
+fullnameOverride: ""
+
+# Change to your cluster name
+clusterName: "test"
+projectName: default
+
+annotations: {}
+
+syncPolicy:
+  prune: true
+  selfHeal: true
+  allowEmpty: true
+
+applications: []
+  # - name: prometheus
+  #   namespace: monitoring
+  #   chart: prometheus-community
+  #   repoURL: https://prometheus-community.github.io/helm-charts
+  #   targetRevision: 15.0.1
+  #   syncWave: 10
+  #   values:
+  #     fullnameOverride: prometheus
