@@ -389,5 +389,4 @@ nodeSelector:
 
 monitoring:
   enabled: false
-  type: prometheus-operator
-  # type: victoria-metrics
+

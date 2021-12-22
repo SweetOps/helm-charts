@@ -1,180 +1,78 @@
-# Following relabel config is taking from:  https://linkerd.io/2/tasks/external-prometheus/
-# XXX: Lokomotive specific change.
-{{- define "controllerRelabels" }}
-    relabelings:
-    - sourceLabels:
-      - __meta_kubernetes_pod_label_linkerd_io_control_plane_component
-      - __meta_kubernetes_pod_container_port_name
-      action: keep
-      regex: (.*);admin-http$
-    - sourceLabels:
-      - __meta_kubernetes_pod_container_name
-      action: replace
-      targetLabel: component
-{{ end }}
-{{- define "monitoringType" }}
-{{- if eq .Values.monitoring.type "prometheus-operator" }}
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-{{- else if eq .Values.monitoring.type "victoria-metrics" }}
-apiVersion: operator.victoriametrics.com/v1beta1
-kind: VMServiceScrape
-{{- end }}
-{{- end }}
+# taken from https://github.com/linkerd/website/issues/853#issuecomment-913234295
 {{ if .Values.monitoring.enabled }}
 ---
-{{- template "monitoringType" . }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
 metadata:
   labels:
     app: linkerd
-    release: prometheus-operator
-  name: linkerd-web
+    release: prometheus-stack
+  name: linkerd-proxy
   namespace: {{ .Values.namespace }}
 spec:
+  namespaceSelector:
+    any: true
   selector:
-    matchLabels:
-      linkerd.io/control-plane-component: web
-  endpoints:
-  - targetPort: 9994
-{{- template "controllerRelabels" . }}
+    matchLabels: {}
+  podMetricsEndpoints:
+    - relabelings:
+      - sourceLabels:
+        - __meta_kubernetes_pod_container_name
+        - __meta_kubernetes_pod_container_port_name
+        - __meta_kubernetes_pod_label_linkerd_io_control_plane_ns
+        action: keep
+        regex: ^linkerd-proxy;linkerd-admin;linkerd$
+      - sourceLabels: [__meta_kubernetes_namespace]
+        action: replace
+        targetLabel: namespace
+      - sourceLabels: [__meta_kubernetes_pod_name]
+        action: replace
+        targetLabel: pod
+      - sourceLabels: [__meta_kubernetes_pod_label_linkerd_io_proxy_job]
+        action: replace
+        targetLabel: k8s_job
+      - action: labeldrop
+        regex: __meta_kubernetes_pod_label_linkerd_io_proxy_job
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_linkerd_io_proxy_(.+)
+      - action: labeldrop
+        regex: __meta_kubernetes_pod_label_linkerd_io_proxy_(.+)
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_linkerd_io_(.+)
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+        replacement: __tmp_pod_label_$1
+      - action: labelmap
+        regex: __tmp_pod_label_linkerd_io_(.+)
+        replacement:  __tmp_pod_label_$1
+      - action: labeldrop
+        regex: __tmp_pod_label_linkerd_io_(.+)
+      - action: labelmap
+        regex: __tmp_pod_label_(.+)
 ---
-{{- template "monitoringType" . }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
 metadata:
   labels:
     app: linkerd
-    release: prometheus-operator
-  name: linkerd-sp-validator
+    release: prometheus-stack
+  name: linkerd-controller
   namespace: {{ .Values.namespace }}
 spec:
+  namespaceSelector:
+    matchNames:
+      - linkerd-viz
+      - linkerd
   selector:
-    matchLabels:
-      linkerd.io/control-plane-component: sp-validator
-  endpoints:
-  - targetPort: 9997
-{{- template "controllerRelabels" . }}
----
-{{- template "monitoringType" . }}
-metadata:
-  labels:
-    app: linkerd
-    release: prometheus-operator
-  name: linkerd-controller-api
-  namespace: {{ .Values.namespace }}
-spec:
-  selector:
-    matchLabels:
-      linkerd.io/control-plane-component: controller
-  endpoints:
-  - targetPort: 9995
-{{- template "controllerRelabels" . }}
----
-{{- template "monitoringType" . }}
-metadata:
-  labels:
-    app: linkerd
-    release: prometheus-operator
-  name: linkerd-identity
-  namespace: {{ .Values.namespace }}
-spec:
-  selector:
-    matchLabels:
-      linkerd.io/control-plane-component: identity
-  endpoints:
-  - targetPort: 9990
-{{- template "controllerRelabels" . }}
----
-{{- template "monitoringType" . }}
-metadata:
-  labels:
-    app: linkerd
-    release: prometheus-operator
-  name: linkerd-proxy-injector
-  namespace: {{ .Values.namespace }}
-spec:
-  selector:
-    matchLabels:
-      linkerd.io/control-plane-component: proxy-injector
-  endpoints:
-  - targetPort: 9995
-{{- template "controllerRelabels" . }}
----
-{{- template "monitoringType" . }}
-metadata:
-  labels:
-    app: linkerd
-    release: prometheus-operator
-  name: linkerd-tap
-  namespace: {{ .Values.namespace }}
-spec:
-  selector:
-    matchLabels:
-      linkerd.io/control-plane-component: tap
-  endpoints:
-  - targetPort: 9998
-{{- template "controllerRelabels" . }}
----
-{{- template "monitoringType" . }}
-metadata:
-  labels:
-    app: linkerd
-    release: prometheus-operator
-  name: linkerd-dst
-  namespace: {{ .Values.namespace }}
-spec:
-  selector:
-    matchLabels:
-      linkerd.io/control-plane-component: destination
-  endpoints:
-  - targetPort: 9996
-{{- template "controllerRelabels" . }}
----
-{{- template "monitoringType" . }}
-metadata:
-  labels:
-    app: linkerd
-    release: prometheus-operator
-  name: linkerd-proxies
-  namespace: {{ .Values.namespace }}
-spec:
-  selector:
-    matchLabels:
-      linkerd.io/control-plane-ns: linkerd
-  endpoints:
-  - targetPort: 4191
-    # # Following relabel config is taking from:  https://linkerd.io/2/tasks/external-prometheus/
-    relabelings:
-    - sourceLabels:
-      - __meta_kubernetes_pod_container_name
-      - __meta_kubernetes_pod_container_port_name
-      - __meta_kubernetes_pod_label_linkerd_io_control_plane_ns
-      action: keep
-      regex: ^linkerd-proxy;linkerd-admin;{{.Values.namespace}}$
-    - sourceLabels: [__meta_kubernetes_namespace]
-      action: replace
-      targetLabel: namespace
-    - sourceLabels: [__meta_kubernetes_pod_name]
-      action: replace
-      targetLabel: pod
-    - sourceLabels: [__meta_kubernetes_pod_label_linkerd_io_proxy_job]
-      action: replace
-      targetLabel: k8s_job
-    - action: labeldrop
-      regex: __meta_kubernetes_pod_label_linkerd_io_proxy_job
-    - action: labelmap
-      regex: __meta_kubernetes_pod_label_linkerd_io_proxy_(.+)
-    - action: labeldrop
-      regex: __meta_kubernetes_pod_label_linkerd_io_proxy_(.+)
-    - action: labelmap
-      regex: __meta_kubernetes_pod_label_linkerd_io_(.+)
-    - action: labelmap
-      regex: __meta_kubernetes_pod_label_(.+)
-      replacement: __tmp_pod_label_$1
-    - action: labelmap
-      regex: __tmp_pod_label_linkerd_io_(.+)
-      replacement:  __tmp_pod_label_$1
-    - action: labeldrop
-      regex: __tmp_pod_label_linkerd_io_(.+)
-    - action: labelmap
-      regex: __tmp_pod_label_(.+)
----
+    matchLabels: {}
+  podMetricsEndpoints:
+    - relabelings:
+      - sourceLabels:
+        - __meta_kubernetes_pod_container_port_name
+        action: keep
+        regex: admin-http
+      - sourceLabels:
+        - __meta_kubernetes_pod_container_name
+        action: replace
+        targetLabel: component
 {{ end }}
