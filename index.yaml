@@ -73,6 +73,31 @@ entries:
   linkerd-jaeger:
   - apiVersion: v1
     appVersion: stable-2.11.1
+    created: "2022-01-28T20:31:02.605099423Z"
+    dependencies:
+    - name: partials
+      repository: file://../partials
+      version: 0.2.0
+    description: 'The Linkerd-Jaeger extension adds distributed tracing to Linkerd
+      using OpenCensus and Jaeger. '
+    digest: f23202b79f0a89d967617f9940a317671c34c83ef13f3631fdf4b11096c522e9
+    home: https://linkerd.io
+    icon: https://linkerd.io/images/logo-only-200h.png
+    keywords:
+    - service-mesh
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: cncf-linkerd-dev@lists.cncf.io
+      name: linkerd
+      url: https://linkerd.io/
+    name: linkerd-jaeger
+    sources:
+    - https://github.com/linkerd/linkerd2/
+    urls:
+    - https://github.com/SweetOps/helm-charts/releases/download/linkerd-jaeger-0.2.1/linkerd-jaeger-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v1
+    appVersion: stable-2.11.1
     created: "2021-12-10T13:04:34.513040991Z"
     dependencies:
     - name: partials
@@ -312,4 +337,4 @@ entries:
     urls:
     - https://github.com/SweetOps/helm-charts/releases/download/partials-0.1.0/partials-0.1.0.tgz
     version: 0.1.0
-generated: "2021-12-22T13:02:40.476690673Z"
+generated: "2022-01-28T20:31:02.605131234Z"
