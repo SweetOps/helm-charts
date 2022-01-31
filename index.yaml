@@ -3,6 +3,18 @@ entries:
   argocd-app-of-apps:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2022-01-31T23:01:51.070980153Z"
+    description: A Helm chart for Kubernetes
+    digest: 1436f6122f049db213436847161e96b28af4204c9bac439c03be0f5592203a76
+    maintainers:
+    - name: SweetOps
+    name: argocd-app-of-apps
+    type: application
+    urls:
+    - https://github.com/SweetOps/helm-charts/releases/download/argocd-app-of-apps-0.1.5/argocd-app-of-apps-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2022-01-31T21:50:51.903756499Z"
     description: A Helm chart for Kubernetes
     digest: c58136610beee7e11deb869924d3af8e5de6a8b7bb9a4ad9afc1d617c70b74a7
@@ -373,4 +385,4 @@ entries:
     urls:
     - https://github.com/SweetOps/helm-charts/releases/download/partials-0.1.0/partials-0.1.0.tgz
     version: 0.1.0
-generated: "2022-01-31T21:50:51.904041099Z"
+generated: "2022-01-31T23:01:51.071115955Z"
