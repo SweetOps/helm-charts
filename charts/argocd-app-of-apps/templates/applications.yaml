@@ -23,6 +23,7 @@ spec:
     targetRevision: {{ .targetRevision }}
 {{- if .values }}
     helm:
+      release_name: {{ .releaseName }}
       values: |
         {{ .values | nindent 8 }}
 {{- end }}
