@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ $.Values.clusterName }}-{{ .name }}
+  name: {{ .name }}
   namespace: {{ $.Release.Namespace }}
   annotations:
     argocd.argoproj.io/sync-wave: {{ .syncWave | quote }} 
@@ -23,7 +23,7 @@ spec:
     targetRevision: {{ .targetRevision }}
 {{- if .values }}
     helm:
-      values: | {{ nindent 8 (toYaml .values) }}
+      values: {{ .values }}
 {{- end }}
 {{- if $.Values.syncPolicy }}
   syncPolicy:
