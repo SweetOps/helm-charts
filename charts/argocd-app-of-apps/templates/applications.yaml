@@ -23,7 +23,8 @@ spec:
     targetRevision: {{ .targetRevision }}
 {{- if .values }}
     helm:
-      values: {{ .values }}
+      values: |
+        {{ .values | nindent 8 }}
 {{- end }}
 {{- if $.Values.syncPolicy }}
   syncPolicy:
