@@ -36,6 +36,10 @@ global:
     dockerdWithinRunnerContainer: true
     labels: []
 
+  env: []
+    # - name: RUNNER_FEATURE_FLAG_EPHEMERAL
+    #   value: "true"
+
   autoscaling:
     minReplicas: 0
     maxReplicas: 3
@@ -45,7 +49,7 @@ global:
 
 runnerDeployments:
   - name: default
-    enabled: false
+    enabled: true
     replicaCount: 1
     image:
       repository: summerwind/actions-runner-dind
@@ -107,6 +111,10 @@ runnerDeployments:
     tolerations: []
 
     affinity: {}
+
+    env: []
+      # - name: RUNNER_FEATURE_FLAG_EPHEMERAL
+      #   value: "true"
 
     autoscaling:
       enabled: false
