@@ -45,6 +45,7 @@ global:
     maxReplicas: 3
     metrics: []
     scaleUpTriggers: []
+    scaleDownDelaySecondsAfterScaleOut: 300
 
 
 runnerDeployments:
