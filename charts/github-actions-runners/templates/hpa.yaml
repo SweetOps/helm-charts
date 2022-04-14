@@ -9,6 +9,7 @@
 {{- $maxReplicas := $autoscaling.maxReplicas | default $.Values.global.autoscaling.maxReplicas }}
 {{- $scaleUpTriggers := $autoscaling.scaleUpTriggers | default $.Values.global.autoscaling.scaleUpTriggers }}
 {{- $metrics := $autoscaling.metrics | default $.Values.global.autoscaling.metrics }}
+{{- $scaleDownDelaySecondsAfterScaleOut := $autoscaling.scaleDownDelaySecondsAfterScaleOut | default $.Values.global.autoscaling.scaleDownDelaySecondsAfterScaleOut }}
 {{- if $autoscalingEnabled }}
 kind: HorizontalRunnerAutoscaler
 apiVersion: actions.summerwind.dev/v1alpha1
@@ -18,6 +19,7 @@ metadata:
     github-actions-runner: {{ .name }}
     {{- include "github-actions-runners.labels" $ | nindent 4 }}
 spec:
+  scaleDownDelaySecondsAfterScaleOut: {{ $scaleDownDelaySecondsAfterScaleOut }}
   minReplicas: {{ $minReplicas }}
   maxReplicas: {{ $maxReplicas }}
   scaleTargetRef:

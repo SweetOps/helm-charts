@@ -7,6 +7,8 @@
 {{- $repository := $imageSpec.repository | default $.Values.global.image.repository }}
 {{- $tag := $imageSpec.tag | default $.Values.global.image.tag }}
 {{- $pullPolicy := $imageSpec.pullPolicy | default $.Values.global.image.pullPolicy }}
+{{- $autoscaling := .autoscaling | default dict }}
+{{- $autoscalingEnabled := $autoscaling.enabled | default false }}
 kind: RunnerDeployment
 apiVersion: actions.summerwind.dev/v1alpha1
 metadata:
@@ -15,7 +17,9 @@ metadata:
     github-actions-runner: {{ .name }}
     {{- include "github-actions-runners.labels" $ | nindent 4 }}
 spec:
+  {{- if not $autoscalingEnabled }}
   replicas: {{ .replicaCount | default $.Values.global.replicaCount }}
+  {{- end }}
   template:
     metadata:
       {{- with (default $.Values.global.podAnnotations .podAnnotations) }}
