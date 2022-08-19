@@ -36,7 +36,8 @@ global:
     dockerdWithinRunnerContainer: true
     labels: []
 
-  env: []
+  env:
+    []
     # - name: RUNNER_FEATURE_FLAG_EPHEMERAL
     #   value: "true"
 
@@ -45,12 +46,12 @@ global:
     maxReplicas: 3
     metrics: []
     scaleUpTriggers: []
+    scheduledOverrides: []
     scaleDownDelaySecondsAfterScaleOut: 300
-
 
 runnerDeployments:
   - name: default
-    enabled: true
+    enabled: false
     replicaCount: 1
     image:
       repository: summerwind/actions-runner-dind
@@ -68,7 +69,8 @@ runnerDeployments:
 
     podAnnotations: {}
 
-    securityContext: {}
+    securityContext:
+      {}
       # capabilities:
       #   drop:
       #   - ALL
@@ -76,7 +78,8 @@ runnerDeployments:
       # runAsNonRoot: true
       # runAsUser: 1000
 
-    resources: {}
+    resources:
+      {}
       # We usually recommend not to specify default resources and to leave this as a conscious
       # choice for the user. This also increases chances charts run on environments with little
       # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -113,16 +116,23 @@ runnerDeployments:
 
     affinity: {}
 
-    env: []
+    env:
+      []
       # - name: RUNNER_FEATURE_FLAG_EPHEMERAL
       #   value: "true"
 
     autoscaling:
       enabled: false
       scaleUpTriggers:
-      - githubEvent:
-          checkRun:
-            types: ["created"]
-            status: "queued"
-        amount: 1
-        duration: "5m"
+        - githubEvent:
+            checkRun:
+              types: ["created"]
+              status: "queued"
+          amount: 1
+          duration: "5m"
+      scheduledOverrides:
+        - startTime: "2021-05-01T00:00:00+09:00"
+          endTime: "2021-05-03T00:00:00+09:00"
+          recurrenceRule:
+            frequency: Weekly
+          minReplicas: 1

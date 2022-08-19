@@ -8,6 +8,7 @@
 {{- $minReplicas := $autoscaling.minReplicas | default $.Values.global.autoscaling.minReplicas }}
 {{- $maxReplicas := $autoscaling.maxReplicas | default $.Values.global.autoscaling.maxReplicas }}
 {{- $scaleUpTriggers := $autoscaling.scaleUpTriggers | default $.Values.global.autoscaling.scaleUpTriggers }}
+{{- $scheduledOverrides := $autoscaling.scheduledOverrides | default $.Values.global.autoscaling.scheduledOverrides }}
 {{- $metrics := $autoscaling.metrics | default $.Values.global.autoscaling.metrics }}
 {{- $scaleDownDelaySecondsAfterScaleOut := $autoscaling.scaleDownDelaySecondsAfterScaleOut | default $.Values.global.autoscaling.scaleDownDelaySecondsAfterScaleOut }}
 {{- if $autoscalingEnabled }}
@@ -30,6 +31,10 @@ spec:
   {{- end }}
   {{- with $metrics }}
   metrics:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $scheduledOverrides }}
+  scheduledOverrides:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
