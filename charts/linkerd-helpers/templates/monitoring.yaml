@@ -3,10 +3,10 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  labels:
-    {{- include "linkerd-helpers.labels" . | nindent 4 }}
   name: linkerd-controller
   namespace: {{ .Values.linkerd.namespace }}
+  labels:
+    {{- include "linkerd-helpers.labels" . | nindent 4 }}
 spec:
   namespaceSelector:
     matchNames:
@@ -51,7 +51,7 @@ spec:
         regex: linkerd-service-mirror;admin-http$
       - sourceLabels: [__meta_kubernetes_pod_container_name]
         action: replace
-        target_label: component
+        targetLabel: component
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
