@@ -165,6 +165,19 @@ entries:
   linkerd-helpers:
   - apiVersion: v2
     appVersion: stable-2.12.1
+    created: "2022-09-29T16:48:52.760928337Z"
+    description: A Helm chart for Kubernetes to provision certificates, prometheus
+      monitors for Linkerd
+    digest: 2e6b19f4d2a4e0a8d01ec872f5c1c2f78015b99429efbb340bda6538f93327f4
+    maintainers:
+    - name: SweetOps
+    name: linkerd-helpers
+    type: application
+    urls:
+    - https://github.com/SweetOps/helm-charts/releases/download/linkerd-helpers-0.1.1/linkerd-helpers-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: stable-2.12.1
     created: "2022-09-29T12:47:37.815191516Z"
     description: A Helm chart for Kubernetes to provision certificates, prometheus
       monitors for Linkerd
@@ -443,4 +456,4 @@ entries:
     urls:
     - https://github.com/SweetOps/helm-charts/releases/download/partials-0.1.0/partials-0.1.0.tgz
     version: 0.1.0
-generated: "2022-09-29T12:47:37.815344014Z"
+generated: "2022-09-29T16:48:52.760979833Z"
