@@ -1,0 +1,57 @@
+{{- if .Values.linkerdViz.enabled -}}
+{{- if .Values.linkerdViz.enabled -}}
+{{- if and .Values.linkerdViz.webhook.ca.crt .Values.linkerdViz.webhook.ca.key -}}
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: webhook-issuer-tls
+  namespace: {{ .Values.linkerdViz.namespace }}
+  labels:
+    linkerd.io/control-plane-component: proxy-injector
+    linkerd.io/viz: {{ .Values.linkerdViz.namespace }}
+data:
+  tls.crt: {{ b64enc (.Values.linkerdViz.webhook.ca.crt | trim )}}
+  tls.key: {{ b64enc (.Values.linkerdViz.webhook.ca.key | trim )}}
+{{- end }}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: webhook-issuer
+  namespace: {{ .Values.linkerdViz.namespace }}
+  labels:
+    linkerd.io/control-plane-component: webhook
+    linkerd.io/viz-ns: {{ .Values.linkerdViz.namespace }}
+    {{- include "linkerd-helpers.labels" . | nindent 4 }}
+spec:
+  ca:
+    secretName: webhook-issuer-tls
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-tap-injector
+  namespace: {{ .Values.linkerdViz.namespace }}
+  labels:
+    linkerd.io/control-plane-component: webhook
+    linkerd.io/viz-ns: {{ .Values.linkerdViz.namespace }}
+    {{- include "linkerd-helpers.labels" . | nindent 4 }}
+spec:
+  secretName: tap-injector-k8s-tls
+  duration: {{ .Values.linkerdViz.webhook.issuer.duration }}
+  renewBefore: {{ .Values.linkerdViz.webhook.issuer.renewBefore }}
+  issuerRef:
+    name: webhook-issuer
+    kind: Issuer
+  commonName: tap-injector.{{ .Values.linkerdViz.namespace }}.svc
+  dnsNames:
+  - tap-injector.{{ .Values.linkerdViz.namespace }}.svc
+  - tap-injector.{{ .Values.linkerdViz.namespace }}.svc.cluster.local
+  isCA: false
+  privateKey:
+    algorithm: ECDSA
+  usages:
+  - server auth
+{{- end }}
+{{- end }}

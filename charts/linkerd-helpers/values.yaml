@@ -1,0 +1,46 @@
+nameOverride: ""
+fullnameOverride: ""
+
+linkerd:
+  enabled: true
+  namespace: linkerd
+  trustAnchor:
+    ca:
+      crt: ""
+      key: ""
+  identityIssuer:
+    duration: 4320h
+    renewBefore: 4000h
+  webhook:
+    ca:
+      crt: ""
+      key: ""
+    issuer:
+      duration: 1440h
+      renewBefore: 1400h
+  monitoring:
+    enabled: true
+    scrapeTimeout: 30s
+    interval: 10s
+
+linkerdViz:
+  enabled: true
+  namespace: linkerd-viz
+  webhook:
+    ca:
+      crt: ""
+      key: ""
+    issuer:
+      duration: 1440h
+      renewBefore: 1400h
+
+linkerdJaeger:
+  enabled: true
+  namespace: linkerd-jaeger
+  webhook:
+    ca:
+      crt: ""
+      key: ""
+    issuer:
+      duration: 1440h
+      renewBefore: 1400h
