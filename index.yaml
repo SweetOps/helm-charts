@@ -162,6 +162,20 @@ entries:
     urls:
     - https://github.com/SweetOps/helm-charts/releases/download/github-actions-runners-0.0.2/github-actions-runners-0.0.2.tgz
     version: 0.0.2
+  linkerd-helpers:
+  - apiVersion: v2
+    appVersion: stable-2.12.1
+    created: "2022-09-29T12:47:37.815191516Z"
+    description: A Helm chart for Kubernetes to provision certificates, prometheus
+      monitors for Linkerd
+    digest: a73ec44fa66ea181e8f4da098f1d22e73243392567c84f29e755ef677fad50f7
+    maintainers:
+    - name: SweetOps
+    name: linkerd-helpers
+    type: application
+    urls:
+    - https://github.com/SweetOps/helm-charts/releases/download/linkerd-helpers-0.1.0/linkerd-helpers-0.1.0.tgz
+    version: 0.1.0
   linkerd-jaeger:
   - apiVersion: v1
     appVersion: stable-2.11.1
@@ -429,4 +443,4 @@ entries:
     urls:
     - https://github.com/SweetOps/helm-charts/releases/download/partials-0.1.0/partials-0.1.0.tgz
     version: 0.1.0
-generated: "2022-08-19T11:32:06.658184705Z"
+generated: "2022-09-29T12:47:37.815344014Z"
