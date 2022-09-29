@@ -2,7 +2,7 @@ apiVersion: v2
 name: linkerd-helpers
 description: A Helm chart for Kubernetes to provision certificates, prometheus monitors for Linkerd
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "stable-2.12.1"
 maintainers:
   - name: SweetOps
