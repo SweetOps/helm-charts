@@ -1,0 +1,105 @@
+{{ if and .Values.linkerd.enabled .Values.linkerd.monitoring.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    {{- include "linkerd-helpers.labels" . | nindent 4 }}
+  name: linkerd-controller
+  namespace: {{ .Values.linkerd.namespace }}
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ .Values.linkerd.namespace }}
+      - {{ .Values.linkerdViz.namespace }}
+      - {{ .Values.linkerdJaeger.namespace }}
+  selector:
+    matchLabels: {}
+  podMetricsEndpoints:
+    - interval: {{ .Values.linkerd.monitoring.interval }}
+      scrapeTimeout: {{ .Values.linkerd.monitoring.scrapeTimeout }}
+      relabelings:
+      - sourceLabels:
+        - __meta_kubernetes_pod_container_port_name
+        action: keep
+        regex: admin-http
+      - sourceLabels:
+        - __meta_kubernetes_pod_container_name
+        action: replace
+        targetLabel: component
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: linkerd-service-mirror
+  namespace: {{ .Values.linkerd.namespace }}
+  labels:
+    {{- include "linkerd-helpers.labels" . | nindent 4 }}
+spec:
+  namespaceSelector:
+    any: true
+  selector:
+    matchLabels: {}
+  podMetricsEndpoints:
+    - interval: {{ .Values.linkerd.monitoring.interval }}
+      scrapeTimeout: {{ .Values.linkerd.monitoring.scrapeTimeout }}
+      relabelings:
+      - sourceLabels:
+        - __meta_kubernetes_pod_label_component
+        - __meta_kubernetes_pod_container_port_name
+        action: keep
+        regex: linkerd-service-mirror;admin-http$
+      - sourceLabels: [__meta_kubernetes_pod_container_name]
+        action: replace
+        target_label: component
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: linkerd-proxy
+  namespace: {{ .Values.linkerd.namespace }}
+  labels:
+    {{- include "linkerd-helpers.labels" . | nindent 4 }}
+spec:
+  namespaceSelector:
+    any: true
+  selector:
+    matchLabels: {}
+  podMetricsEndpoints:
+    - interval: {{ .Values.linkerd.monitoring.interval }}
+      scrapeTimeout: {{ .Values.linkerd.monitoring.scrapeTimeout }}
+      relabelings:
+        - sourceLabels:
+            - __meta_kubernetes_pod_container_name
+            - __meta_kubernetes_pod_container_port_name
+            - __meta_kubernetes_pod_label_linkerd_io_control_plane_ns
+          action: keep
+          regex: ^linkerd-proxy;linkerd-admin;{{ .Values.linkerd.namespace }}$
+        - sourceLabels: [ __meta_kubernetes_namespace ]
+          action: replace
+          targetLabel: namespace
+        - sourceLabels: [ __meta_kubernetes_pod_name ]
+          action: replace
+          targetLabel: pod
+        - sourceLabels: [ __meta_kubernetes_pod_label_linkerd_io_proxy_job ]
+          action: replace
+          targetLabel: k8s_job
+        - action: labeldrop
+          regex: __meta_kubernetes_pod_label_linkerd_io_proxy_job
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_linkerd_io_proxy_(.+)
+        - action: labeldrop
+          regex: __meta_kubernetes_pod_label_linkerd_io_proxy_(.+)
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_linkerd_io_(.+)
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_(.+)
+          replacement: __tmp_pod_label_$1
+        - action: labelmap
+          regex: __tmp_pod_label_linkerd_io_(.+)
+          replacement: __tmp_pod_label_$1
+        - action: labeldrop
+          regex: __tmp_pod_label_linkerd_io_(.+)
+        - action: labelmap
+          regex: __tmp_pod_label_(.+)
+{{ end }}
