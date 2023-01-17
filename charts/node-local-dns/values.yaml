@@ -1,4 +1,3 @@
----
 image:
   repository: k8s.gcr.io/dns/k8s-dns-node-cache
   pullPolicy: IfNotPresent
@@ -6,9 +5,9 @@ image:
   args:
     interfaceName: nodelocaldns
     healthPort: 8080
-    skipTeardown: true
+    skipTeardown: false
     syncInterval: 1ns
-    # setupIptables: false
+    setupIptables: true
     # setupEbtables: false
     # quiet: false
     # upstreamSvc: kube-dns
@@ -16,8 +15,8 @@ image:
 imagePullSecrets: []
 
 config:
-  localDnsIp: 169.254.20.11
-  kubeDnsIp: ""
+  localDnsIp: 169.254.20.10
+  kubeDnsIp: 172.20.0.10
   zones:
     - zone: .:53
       plugins:
@@ -29,13 +28,16 @@ config:
           classes: all
         cache:
           parameters: 30
-          denial: {}
+          denial:
+            {}
             # size: 0
             # ttl: 1
-          success: {}
+          success:
+            {}
             # size: 8192
             # ttl: 30
-          prefetch: {}
+          prefetch:
+            {}
             # amount: 1
             # duration: 10m
             # percentage: 20%
@@ -61,8 +63,22 @@ config:
           classes: all
         cache:
           parameters: 30
+          denial:
+            {}
+            # size: 0
+            # ttl: 1
+          success:
+            {}
+            # size: 8192
+            # ttl: 30
+          prefetch:
+            {}
+            # amount: 1
+            # duration: 10m
+            # percentage: 20%
+          serve_stale: false
         forward:
-          parameters: __PILLAR__UPSTREAM__SERVERS__
+          parameters: __PILLAR__CLUSTER__DNS__
           force_tcp: false
         prometheus: true
         health:
@@ -77,8 +93,50 @@ config:
           classes: all
         cache:
           parameters: 30
+          denial:
+            {}
+            # size: 0
+            # ttl: 1
+          success:
+            {}
+            # size: 8192
+            # ttl: 30
+          prefetch:
+            {}
+            # amount: 1
+            # duration: 10m
+            # percentage: 20%
+          serve_stale: false
         forward:
-          parameters: __PILLAR__UPSTREAM__SERVERS__
+          parameters: __PILLAR__CLUSTER__DNS__
+          force_tcp: false
+        prometheus: true
+        health:
+          port: 8080
+    - zone: cluster.local:53
+      plugins:
+        errors: true
+        reload: true
+        debug: false
+        log:
+          format: combined
+          classes: all
+        cache:
+          parameters: 30
+          denial:
+            size: 0
+            ttl: 1
+          success:
+            size: 9984
+            ttl: 30
+          prefetch:
+            {}
+            # amount: 1
+            # duration: 10m
+            # percentage: 20%
+          serve_stale: false
+        forward:
+          parameters: __PILLAR__CLUSTER__DNS__
           force_tcp: false
         prometheus: true
         health:
