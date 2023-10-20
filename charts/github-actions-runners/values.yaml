@@ -19,6 +19,7 @@ global:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  topologySpreadConstraints: {}
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -115,6 +116,8 @@ runnerDeployments:
     tolerations: []
 
     affinity: {}
+
+    topologySpreadConstraints: {}
 
     env:
       []
